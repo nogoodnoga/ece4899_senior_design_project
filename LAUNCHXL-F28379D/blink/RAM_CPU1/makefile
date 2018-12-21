@@ -8,6 +8,8 @@ GEN_OPTS__FLAG :=
 GEN_CMDS__FLAG := 
 
 ORDERED_OBJS += \
+"./F2837xD_CodeStartBranch.obj" \
+"./F2837xD_GlobalVariableDefs.obj" \
 "./device.obj" \
 "./main.obj" \
 "../driverlib.lib" \
@@ -156,8 +158,9 @@ blink.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "device.obj" "main.obj" 
-	-$(RM) "device.d" "main.d" 
+	-$(RM) "F2837xD_CodeStartBranch.obj" "F2837xD_GlobalVariableDefs.obj" "device.obj" "main.obj" 
+	-$(RM) "F2837xD_GlobalVariableDefs.d" "device.d" "main.d" 
+	-$(RM) "F2837xD_CodeStartBranch.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

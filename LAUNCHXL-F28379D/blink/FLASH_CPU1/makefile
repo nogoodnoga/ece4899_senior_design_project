@@ -9,6 +9,7 @@ GEN_CMDS__FLAG :=
 
 ORDERED_OBJS += \
 "./F2837xD_CodeStartBranch.obj" \
+"./F2837xD_GlobalVariableDefs.obj" \
 "./device.obj" \
 "./main.obj" \
 "../driverlib.lib" \
@@ -143,7 +144,7 @@ all: $(OBJS) $(LIB_SRCS) $(GEN_CMDS)
 blink.out: $(OBJS) $(LIB_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: C2000 Linker'
-	"/Applications/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.4.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --advice:performance=all --define=_FLASH --define=CPU1 -g --diag_warning=225 --diag_wrap=off --display_error_number -z -m"blink.map" --stack_size=0x200 --warn_sections -i"/Applications/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.4.LTS/lib" -i"/Applications/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.4.LTS/include" -i"/Applications/ti/c2000/C2000Ware_1_00_06_00/device_support/f2837xd/headers/cmd" -i"/Applications/ti/c2000/C2000Ware_1_00_06_00/device_support/f2837xd/common/cmd" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="blink_linkInfo.xml" --rom_model -o "blink.out" $(ORDERED_OBJS)
+	"/Applications/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.4.LTS/bin/cl2000" -v28 -ml -mt --cla_support=cla1 --float_support=fpu32 --tmu_support=tmu0 --vcu_support=vcu2 --advice:performance=all --define=_LAUNCHXL_F28379D --define=_FLASH --define=CPU1 -g --diag_warning=225 --diag_wrap=off --display_error_number -z -m"blink.map" --stack_size=0x200 --warn_sections -i"/Applications/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.4.LTS/lib" -i"/Applications/ti/ccsv8/tools/compiler/ti-cgt-c2000_18.1.4.LTS/include" -i"/Applications/ti/c2000/C2000Ware_1_00_06_00/device_support/f2837xd/headers/cmd" -i"/Applications/ti/c2000/C2000Ware_1_00_06_00/device_support/f2837xd/common/cmd" --reread_libs --diag_wrap=off --display_error_number --xml_link_info="blink_linkInfo.xml" --rom_model -o "blink.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
@@ -157,8 +158,8 @@ blink.hex: $(EXE_OUTPUTS)
 # Other Targets
 clean:
 	-$(RM) $(BIN_OUTPUTS__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "F2837xD_CodeStartBranch.obj" "device.obj" "main.obj" 
-	-$(RM) "device.d" "main.d" 
+	-$(RM) "F2837xD_CodeStartBranch.obj" "F2837xD_GlobalVariableDefs.obj" "device.obj" "main.obj" 
+	-$(RM) "F2837xD_GlobalVariableDefs.d" "device.d" "main.d" 
 	-$(RM) "F2837xD_CodeStartBranch.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
