@@ -1,4 +1,4 @@
-/****************************************************************************
+/***************************************************************************
 | Project           : gps
 |
 | Program name      : main.c
@@ -14,7 +14,7 @@
 | Date          Author      Ref     Revision
 | ** *** ****   qrogers      1      Initial Release
 |
-****************************************************************************/
+***************************************************************************/
 
 #include "driverlib.h"
 #include "device.h"
@@ -46,9 +46,9 @@ void main(void)
 
 	SCI_performSoftwareReset(SCIB_BASE);
 
-	SCI_setConfig(SCIB_BASE, DEVICE_LSPCLK_FREQ, 9600, (SCI_CONFIG_WLEN_8 |
-																	  SCI_CONFIG_STOP_ONE |
-																	  SCI_CONFIG_PAR_NONE));
+	SCI_setConfig(SCIB_BASE, DEVICE_LSPCLK_FREQ, 9600, (SCI_CONFIG_WLEN_8   |
+													                SCI_CONFIG_STOP_ONE |
+													                SCI_CONFIG_PAR_NONE));
 	SCI_resetChannels(SCIB_BASE);
 	SCI_resetRxFIFO(SCIB_BASE);
 	SCI_resetTxFIFO(SCIB_BASE);
