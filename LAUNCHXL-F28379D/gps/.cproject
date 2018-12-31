@@ -39,6 +39,7 @@
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.1.compilerID.INCLUDE_PATH.1565943509" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.1.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/Source}"/>
 									<listOptionValue builtIn="false" value="/Applications/ti/c2000/C2000Ware_1_00_06_00/driverlib/f2837xd/driverlib"/>
 									<listOptionValue builtIn="false" value="/Applications/ti/c2000/C2000Ware_1_00_06_00/device_support/f2837xd/common/include"/>
 									<listOptionValue builtIn="false" value="/Applications/ti/c2000/C2000Ware_1_00_06_00/device_support/f2837xd/headers/include"/>
@@ -130,6 +131,7 @@
 								<option id="com.ti.ccstudio.buildDefinitions.C2000_18.1.compilerID.INCLUDE_PATH.922974254" name="Add dir to #include search path (--include_path, -I)" superClass="com.ti.ccstudio.buildDefinitions.C2000_18.1.compilerID.INCLUDE_PATH" valueType="includePath">
 									<listOptionValue builtIn="false" value="${PROJECT_ROOT}"/>
 									<listOptionValue builtIn="false" value="${CG_TOOL_ROOT}/include"/>
+									<listOptionValue builtIn="false" value="${workspace_loc:/${ProjName}/Source}"/>
 									<listOptionValue builtIn="false" value="/Applications/ti/c2000/C2000Ware_1_00_06_00/driverlib/f2837xd/driverlib"/>
 									<listOptionValue builtIn="false" value="/Applications/ti/c2000/C2000Ware_1_00_06_00/device_support/f2837xd/common/include"/>
 									<listOptionValue builtIn="false" value="/Applications/ti/c2000/C2000Ware_1_00_06_00/device_support/f2837xd/headers/include"/>

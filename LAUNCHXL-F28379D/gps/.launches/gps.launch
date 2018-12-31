@@ -4,7 +4,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM./Users/quincyrogers/Documents/ECE 4899/github/LAUNCHXL-F28379D/gps/targetConfigs/TMS320F28379D.ccxml.Texas Instruments XDS100v2 USB Debug Probe/C28xx_CPU1" value="${build_artifact:gps}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT./Users/quincyrogers/Documents/ECE 4899/github/LAUNCHXL-F28379D/gps/targetConfigs/TMS320F28379D.ccxml.Texas Instruments XDS100v2 USB Debug Probe/C28xx_CPU1" value="gps"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:gps}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM./Users/quincyrogers/Documents/ECE 4899/github/LAUNCHXL-F28379D/gps/targetConfigs/TMS320F28379D.ccxml.Texas Instruments XDS100v2 USB Debug Probe/C28xx_CPU1" value="/Users/quincyrogers/Documents/ECE 4899/github/LAUNCHXL-F28379D/gps/RAM_CPU1/gps.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM./Users/quincyrogers/Documents/ECE 4899/github/LAUNCHXL-F28379D/gps/targetConfigs/TMS320F28379D.ccxml.Texas Instruments XDS100v2 USB Debug Probe/C28xx_CPU1" value="/Users/quincyrogers/Documents/ECE 4899/github/LAUNCHXL-F28379D/gps/FLASH_CPU1/gps.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/gps"/>
 </listAttribute>
