@@ -36,39 +36,39 @@ bool          _is_gps_data_good = 0;
 #endif
 
 // verify is character is a digit
-bool gpsisdigit(char c) 
-{ 
-  return c >= '0' && c <= '9'; 
+bool gpsisdigit(char c)
+{
+  return c >= '0' && c <= '9';
 }
 
 // signed altitude in centimeters (from GPGGA sentence)
-int32_t altitude() 
-{ 
-  return _altitude; 
+int32_t altitude()
+{
+  return _altitude;
 }
 
 // course in last full GPRMC sentence in 100th of a degree
-uint32_t course() 
-{ 
-  return _course; 
+uint32_t course()
+{
+  return _course;
 }
 
 // speed in last full GPRMC sentence in 100ths of a knot
-uint32_t speed() 
+uint32_t speed()
 {
-  return _speed; 
+  return _speed;
 }
 
 // satellites used in last full GPGGA sentence
-uint16_t gps_satellites() 
-{ 
-  return _numsats; 
+uint16_t gps_satellites()
+{
+  return _numsats;
 }
 
 // horizontal dilution of precision in 100ths
-uint32_t gps_hdop() 
-{ 
-  return _hdop; 
+uint32_t gps_hdop()
+{
+  return _hdop;
 }
 
 clock_t uptime()
@@ -76,12 +76,12 @@ clock_t uptime()
 	return clock() / (CLOCKS_PER_SEC / 1000);
 }
 
-float radians(float deg)
+float deg_to_rad(float deg)
 {
 	return deg * (PI/180);
 }
 
-float degrees(float rad)
+float rad_to_deg(float rad)
 {
 	return rad * (180/PI);
 }
@@ -112,7 +112,7 @@ bool gps_encode(char c)
       _is_checksum_term = c == '*';
 
       return valid_sentence;
-  
+
     case '$': // sentence begin
       _term_number = 0;
       _term_offset = 0;
@@ -120,7 +120,7 @@ bool gps_encode(char c)
       _sentence_type = GPS_SENTENCE_OTHER;
       _is_checksum_term = false;
       _is_gps_data_good = false;
-      
+
       return valid_sentence;
   }
 
@@ -155,7 +155,7 @@ void gps_stats(uint32_t *chars, uint16_t *sentences, uint16_t *failed_cs)
 }
 #endif
 
-int32_t from_hex(char a) 
+int32_t from_hex(char a)
 {
   if (a >= 'A' && a <= 'F')
   {
@@ -379,50 +379,49 @@ int32_t gpsstrcmp(const char *str1, const char *str2)
   return *str1;
 }
 
-/* static */
-float gps_distance_between (float lat1, float int32_t1, 
-                            float lat2, float int32_t2) 
+float gps_distance_between (float lat1, float lon1,
+                            float lat2, float lon2)
 {
-  float delta = radians(int32_t1-int32_t2);
-  float sdint32_t = (float)sin(delta);
-  float cdint32_t = (float)cos(delta);
-  lat1 = radians(lat1);
-  lat2 = radians(lat2);
-  float slat1 = sin(lat1);
-  float clat1 = cos(lat1);
-  float slat2 = sin(lat2);
-  float clat2 = cos(lat2);
-  delta = (clat1 * slat2) - (slat1 * clat2 * cdint32_t); 
-  delta = sq(delta); 
-  delta += sq(clat2 * sdint32_t); 
-  delta = sqrt(delta); 
-  float denom = (slat1 * slat2) + (clat1 * clat2 * cdint32_t); 
-  delta = atan2(delta, denom); 
-  return delta * 6372795; 
+  lat1  = deg_to_rad(lat1);
+  lon1  = deg_to_rad(lon1);
+  lat2  = deg_to_rad(lat2);
+  lon2  = deg_to_rad(lon2);
+
+  float dlon = (lon2 - lon1);
+  float dlat = (lat2 - lat1);
+  float a = pow(sin(dlat/2.0), 2) +
+                    cos(lat1) * cos(lat2) * pow(sin(dlon/2.0), 2);
+  float c = 2 * atan2(sqrt(a), sqrt(1-a));
+  float d = 6372795 * c;
+
+  return d;
 }
 
-float gps_course_to (float lat1, float int32_t1, 
-                     float lat2, float int32_t2) 
+float gps_course_to (float lat1, float lon1,
+                     float lat2, float lon2)
 {
-  float dlon = radians(int32_t2-int32_t1);
-  lat1 = radians(lat1);
-  lat2 = radians(lat2);
-  float a1 = sin(dlon) * cos(lat2);
-  float a2 = sin(lat1) * cos(lat2) * cos(dlon);
-  a2 = cos(lat1) * sin(lat2) - a2;
-  a2 = atan2(a1, a2);
-  if (a2 < 0.0)
+  lat1  = deg_to_rad(lat1);
+  lon1  = deg_to_rad(lon1);
+  lat2  = deg_to_rad(lat2);
+  lon2  = deg_to_rad(lon2);
+
+  float direction = rad_to_deg(atan2(sin(lon2-lon1)*cos(lat2),
+                                  cos(lat1)*sin(lat2) - sin(lat1) *
+                                      cos(lat2)*cos(lon2-lon1)));
+
+  if (direction < 0)
   {
-    a2 += TWO_PI;
+    direction += 360;
   }
-  return degrees(a2);
+
+  return direction;
 }
 
 const char *gps_cardinal (float course)
 {
-  static const char* directions[] = {"N", "NNE", "NE", "ENE", 
-                                     "E", "ESE", "SE", "SSE", 
-                                     "S", "SSW", "SW", "WSW", 
+  static const char* directions[] = {"N", "NNE", "NE", "ENE",
+                                     "E", "ESE", "SE", "SSE",
+                                     "S", "SSW", "SW", "WSW",
                                      "W", "WNW", "NW", "NNW"};
 
   int32_t direction = (int32_t)((course + 11.25f) / 22.5f);
@@ -430,8 +429,8 @@ const char *gps_cardinal (float course)
   return directions[direction % 16];
 }
 
-void gps_get_position(int32_t  *latitude, 
-                      int32_t  *longitude, 
+void gps_get_position(int32_t  *latitude,
+                      int32_t  *longitude,
                       uint32_t *fix_age)
 {
   if (latitude)
@@ -444,7 +443,7 @@ void gps_get_position(int32_t  *latitude,
   }
   if (fix_age)
   {
-	  *fix_age = (_last_position_fix == GPS_INVALID_FIX_TIME) ? 
+	  *fix_age = (_last_position_fix == GPS_INVALID_FIX_TIME) ?
 		                        GPS_INVALID_AGE : uptime() - _last_position_fix;
   }
 }
@@ -462,13 +461,13 @@ void gps_get_datetime(uint32_t *date, uint32_t *time, uint32_t *age)
   }
   if (age)
   {
-	  *age = _last_time_fix == GPS_INVALID_FIX_TIME ? 
+	  *age = _last_time_fix == GPS_INVALID_FIX_TIME ?
 		                            GPS_INVALID_AGE : uptime() - _last_time_fix;
   }
 }
 
-void gps_f_get_position(float   *latitude, 
-                        float   *longitude, 
+void gps_f_get_position(float   *latitude,
+                        float   *longitude,
                         uint32_t *fix_age)
 {
   int32_t lat, lon;
@@ -479,53 +478,53 @@ void gps_f_get_position(float   *latitude,
   *longitude = lon == GPS_INVALID_ANGLE ? GPS_INVALID_F_ANGLE : (lon / 100000.0);
 }
 
-void gps_crack_datetime(int32_t       *year, 
-                        unsigned char *month, 
-                        unsigned char *day, 
-                        unsigned char *hour, 
-                        unsigned char *minute, 
-                        unsigned char *second, 
-                        unsigned char *hundredths, 
+void gps_crack_datetime(int32_t       *year,
+                        unsigned char *month,
+                        unsigned char *day,
+                        unsigned char *hour,
+                        unsigned char *minute,
+                        unsigned char *second,
+                        unsigned char *hundredths,
                         uint32_t      *age)
 {
   uint32_t date, time;
 
   gps_get_datetime(&date, &time, age);
 
-  if(year) 
+  if(year)
   {
     *year = date % 100;
     *year += *year > 80 ? 1900 : 2000;
   }
-  if(month) 
+  if(month)
   {
     *month = (date / 100) % 100;
   }
-  if(day) 
+  if(day)
   {
     *day = date / 10000;
   }
-  if(hour) 
+  if(hour)
   {
     *hour = time / 1000000;
   }
-  if(minute) 
+  if(minute)
   {
     *minute = (time / 10000) % 100;
   }
-  if(second) 
+  if(second)
   {
     *second = (time / 100) % 100;
   }
-  if(hundredths) 
+  if(hundredths)
   {
     *hundredths = time % 100;
   }
 }
 
-float gps_f_altitude()    
+float gps_f_altitude()
 {
-  return _altitude == 
+  return _altitude ==
             GPS_INVALID_ALTITUDE ? GPS_INVALID_F_ALTITUDE : _altitude / 100.0;
 }
 
@@ -534,28 +533,28 @@ float gps_f_course()
   return _course == GPS_INVALID_ANGLE ? GPS_INVALID_F_ANGLE : _course / 100.0;
 }
 
-float gps_f_speed_knots() 
+float gps_f_speed_knots()
 {
   return _speed == GPS_INVALID_SPEED ? GPS_INVALID_F_SPEED : _speed / 100.0;
 }
 
-float gps_f_speed_mph()   
-{ 
+float gps_f_speed_mph()
+{
   float sk = gps_f_speed_knots();
-  return sk == GPS_INVALID_F_SPEED ? GPS_INVALID_F_SPEED 
-                                      : GPS_MPH_PER_KNOT * gps_f_speed_knots(); 
+  return sk == GPS_INVALID_F_SPEED ? GPS_INVALID_F_SPEED
+                                      : GPS_MPH_PER_KNOT * gps_f_speed_knots();
 }
 
-float gps_f_speed_mps()   
-{ 
+float gps_f_speed_mps()
+{
   float sk = gps_f_speed_knots();
-  return sk == GPS_INVALID_F_SPEED ? GPS_INVALID_F_SPEED 
-                                      : GPS_MPS_PER_KNOT * gps_f_speed_knots(); 
+  return sk == GPS_INVALID_F_SPEED ? GPS_INVALID_F_SPEED
+                                      : GPS_MPS_PER_KNOT * gps_f_speed_knots();
 }
 
-float gps_f_speed_kmph()  
-{ 
+float gps_f_speed_kmph()
+{
   float sk = gps_f_speed_knots();
-  return sk == GPS_INVALID_F_SPEED ? GPS_INVALID_F_SPEED 
-                                      : GPS_KMPH_PER_KNOT * gps_f_speed_knots(); 
+  return sk == GPS_INVALID_F_SPEED ? GPS_INVALID_F_SPEED
+                                      : GPS_KMPH_PER_KNOT * gps_f_speed_knots();
 }
