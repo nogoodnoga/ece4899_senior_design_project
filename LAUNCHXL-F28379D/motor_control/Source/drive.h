@@ -5,6 +5,10 @@
 #define STRAIGHT 90
 #define LEFT    150
 
+#define GO   	 1680
+#define BACK 	 1150
+#define STOP 	 1500
+
 // remap a number from one range to another
 uint32_t map(uint32_t x,
              uint32_t in_min , uint32_t in_max,
@@ -30,5 +34,14 @@ void turn_right();
 // TODO: NEEDS TO BE TESTED
 // turn vehicle based on the error between the heading and bearing
 void turn_servo(float error);
+
+// drive vehicle forward
+void drive_forward(uint32_t delay_time);
+
+// stop vehicle
+void drive_stop(uint32_t delay_time);
+
+// drive vehicle backward
+void drive_backward(uint32_t delay_time);
 
 #endif
