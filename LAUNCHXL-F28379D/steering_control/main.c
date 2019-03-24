@@ -18,6 +18,7 @@
 ***************************************************************************/
 #include "driverlib.h"
 #include "device.h"
+#include "drive.h"
 
 // configure ePWM1
 void init_ePWM1()
@@ -31,13 +32,13 @@ void init_ePWM1()
     // Set Compare values
     EPWM_setCounterCompareValue(EPWM1_BASE,
                                 EPWM_COUNTER_COMPARE_A,
-                                850);
+                                1500);
 
     // Set up counter mode
     EPWM_setTimeBaseCounterMode(EPWM1_BASE, EPWM_COUNTER_MODE_UP);
     EPWM_disablePhaseShiftLoad(EPWM1_BASE);
     EPWM_setClockPrescaler(EPWM1_BASE,
-                           EPWM_CLOCK_DIVIDER_64,
+                           EPWM_CLOCK_DIVIDER_32,
                            EPWM_HSCLOCK_DIVIDER_1);
 
     // Set up shadowing
@@ -56,33 +57,6 @@ void init_ePWM1()
                                   EPWM_AQ_OUTPUT_ON_TIMEBASE_UP_CMPA);
 }
 
-// remap a number from one range to another
-uint32_t map(uint32_t x,
-             uint32_t in_min , uint32_t in_max,
-             uint32_t out_min, uint32_t out_max)
-{
-   return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
-// writes a value in microseconds (uS) to the servo
-uint32_t write_microseconds(uint32_t _us)
-{
-   return ((200 * _us) / 128);
-}
-
-// writes a value to the servo, controlling the shaft accordingly (0 to 180 only)
-void servo_write(uint32_t pos)
-{
-   uint32_t value = 0;
-
-   value = map(pos, 0, 180, 600, 2400);
-   value = write_microseconds(value);
-
-   EPWM_setCounterCompareValue(EPWM1_BASE,
-                              EPWM_COUNTER_COMPARE_A,
-                              value);
-}
-
 void main(void)
 {
    Device_init();
@@ -97,15 +71,15 @@ void main(void)
 
    while(1)
    {
-      for(pos = 0; pos <= 180; pos++)
+      for(pos = 30; pos <= 150; pos++)
       {
-        servo_write(pos);
+        servo_write(EPWM1_BASE, EPWM_COUNTER_COMPARE_A, pos);
         DEVICE_DELAY_US(15000);
       }
 
-      for(pos = 180; pos > 0; pos--)
+      for(pos = 180; pos > 30; pos--)
       {
-        servo_write(pos);
+        servo_write(EPWM1_BASE, EPWM_COUNTER_COMPARE_A, pos);
         DEVICE_DELAY_US(15000);
       }
    }
