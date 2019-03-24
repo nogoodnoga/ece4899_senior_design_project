@@ -18,9 +18,9 @@ uint32_t write_microseconds(uint32_t _us)
 }
 
 // writes a value to the servo, controlling the shaft accordingly (0 to 180 only)
-void servo_write(uint32_t pwm_address,
+void servo_write(uint32_t                  pwm_address,
                  EPWM_CounterCompareModule compare_module,
-                 uint32_t pos)
+                 uint32_t                  pos)
 {
    uint32_t value = 0;
 
@@ -30,4 +30,46 @@ void servo_write(uint32_t pwm_address,
    EPWM_setCounterCompareValue(pwm_address,
                                compare_module,
                                value);
+}
+
+// turn vehicle straight
+void turn_straight()
+{
+   servo_write(EPWM1_BASE, EPWM_COUNTER_COMPARE_A, STRAIGHT);
+   DEVICE_DELAY_US(1000000);
+}
+
+// turn vehicle right
+void turn_right()
+{
+   servo_write(EPWM1_BASE, EPWM_COUNTER_COMPARE_A, RIGHT);
+   DEVICE_DELAY_US(1000000);
+}
+
+// turn vehicle left
+void turn_left()
+{
+   servo_write(EPWM1_BASE, EPWM_COUNTER_COMPARE_A, LEFT);
+   DEVICE_DELAY_US(1000000);
+}
+
+// TODO: NEEDS TO BE TESTED
+// turn vehicle based on the error between the heading and bearing
+// error = heading - bearing
+void turn_servo(float error)
+{
+   // constrain to -180 to 180 degree range
+   if (error > 180)
+   {
+      error -= 360;
+   }
+   if (error < -180)
+   {
+      error += 360;
+   }
+
+   // The divisor is to reduce the reaction speed and avoid oscillations
+   error /= 3;
+
+   servo_write(EPWM1_BASE, EPWM_COUNTER_COMPARE_A, STRAIGHT + error);
 }
